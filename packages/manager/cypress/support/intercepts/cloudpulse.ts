@@ -632,3 +632,44 @@ export const mockGetCloudPulseServiceByType = (
     makeResponse(service)
   );
 };
+
+/**
+ * Mocks successful creation of an alert channel (200).
+ */
+export const mockCreateAlertChannelSuccess = (
+  channel: NotificationChannel
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'POST',
+    apiMatcher('/monitor/alert-channels'),
+    makeResponse(channel) // defaults to 200
+  );
+};
+
+/**
+ * Mocks client error while creating alert channel (400).
+ */
+export const mockCreateAlertChannelBadRequest = (
+  field: string,
+  reason: string,
+  statusCode: number = 400
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'POST',
+    apiMatcher('/monitor/alert-channels'),
+    makeErrorResponse({ field, reason }, statusCode)
+  );
+};
+
+/**
+ * Mocks server error while creating alert channel (500).
+ */
+export const mockCreateAlertChannelServerError = (
+  errorMessage: string = 'Internal server error'
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'POST',
+    apiMatcher('/monitor/alert-channels'),
+    makeErrorResponse(errorMessage, 500)
+  );
+};
