@@ -632,3 +632,132 @@ export const mockGetCloudPulseServiceByType = (
     makeResponse(service)
   );
 };
+
+/**
+ * Mocks successful creation of an alert channel (200).
+ * Intercepts POST requests to create alert channels and returns the provided channel object.
+ *
+ * @param {NotificationChannel} channel - The notification channel object to return in the response.
+ * @returns {Cypress.Chainable<null>} - A Cypress chainable used to continue the test flow.
+ */
+export const mockCreateAlertChannelSuccess = (
+  channel: NotificationChannel
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'POST',
+    apiMatcher('/monitor/alert-channels'),
+    makeResponse(channel) // defaults to 200
+  );
+};
+
+/**
+ * Mocks client error while creating alert channel (400).
+ * Intercepts POST requests to create alert channels and returns an error response.
+ * @param {string} field - The field that caused the error.
+ * @param {string} reason - The reason for the error.
+ * @param {number} statusCode - The HTTP status code for the error response (default is 400).
+ * @returns {Cypress.Chainable<null>} - A Cypress chainable used to continue the test flow.
+ */
+export const mockCreateAlertChannelBadRequest = (
+  field: string,
+  reason: string,
+  statusCode: number = 400
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'POST',
+    apiMatcher('/monitor/alert-channels'),
+    makeErrorResponse({ field, reason }, statusCode)
+  );
+};
+
+/**
+ * Mocks server error while creating alert channel (500).
+ * Intercepts POST requests to create alert channels and returns an error response.
+ *
+ * @param {string} errorMessage - The error message to return in the response.
+ * @returns {Cypress.Chainable<null>} - A Cypress chainable used to continue the test flow.
+ */
+export const mockCreateAlertChannelServerError = (
+  errorMessage: string = 'Internal server error'
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'POST',
+    apiMatcher('/monitor/alert-channels'),
+    makeErrorResponse(errorMessage, 500)
+  );
+};
+
+/**
+ * Mocks get call for a specific alert channel by ID.
+ *
+ * @param {number} id - The ID of the alert channel to retrieve.
+ * @param {NotificationChannel} channel - The notification channel object to return in the response.
+ * @returns {Cypress.Chainable<null>} - A Cypress chainable used to continue the test flow.
+ */
+export const mockGetAlertChannelById = (
+  id: number,
+  channel: NotificationChannel
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'GET',
+    apiMatcher(`/monitor/alert-channels/${id}`),
+    makeResponse(channel)
+  );
+};
+
+/**
+ * Mocks put call to update a specific alert channel by ID.
+ * Intercepts PUT requests to update alert channels and returns the provided channel object.
+ *
+ * @param {number} id - The ID of the alert channel to update.
+ * @param {NotificationChannel} channel - The notification channel object to return in the response.
+ * @returns {Cypress.Chainable<null>} - A Cypress chainable used to continue the test flow.
+ */
+export const mockUpdateAlertChannelById = (
+  id: number,
+  channel: NotificationChannel
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'PUT',
+    apiMatcher(`/monitor/alert-channels/${id}`),
+    makeResponse(channel)
+  );
+};
+
+/**
+ * Mocks put call to update a specific alert channel by ID with error response.
+ * Intercepts PUT requests to update alert channels and returns an error response.
+ * @param {number} id - The ID of the alert channel to update.
+ * @param {string} errorMessage - The error message to return in the response.
+ * @returns {Cypress.Chainable<null>} - A Cypress chainable used to continue the test flow.
+ */
+export const mockUpdateAlertChannelByIdError = (
+  id: number,
+  errorMessage: string = 'Internal server error'
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'PUT',
+    apiMatcher(`/monitor/alert-channels/${id}`),
+    makeErrorResponse(errorMessage, 500)
+  );
+};
+
+/**
+ * Mocks put call to update a specific alert channel by ID with error response.
+ * Intercepts PUT requests to update alert channels and returns an error response.
+ * @param {number} id - The ID of the alert channel to update.
+ * @param {string} errorMessage - The error message to return in the response.
+ * @returns {Cypress.Chainable<null>} - A Cypress chainable used to continue the test flow.
+ */
+export const mockUpdateAlertChannelByIdBadRequest = (
+  id: number,
+  field: string,
+  reason: string,
+  statusCode: number = 400
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'PUT',
+    apiMatcher(`/monitor/alert-channels/${id}`),
+    makeErrorResponse({ field, reason }, statusCode)
+  );
+};
