@@ -27,7 +27,7 @@ export const notificationChannelFactory =
     status: 'Enabled',
     type: 'user',
     updated: new Date().toISOString(),
-    updated_by: 'user1',
+    updated_by: 'user5',
   });
 
 export const notificationChannelAlertsFactory =

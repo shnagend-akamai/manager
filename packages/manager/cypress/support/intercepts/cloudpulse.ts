@@ -17,6 +17,7 @@ import type {
   Dashboard,
   MetricDefinition,
   NotificationChannel,
+  NotificationChannelAlerts,
   Service,
 } from '@linode/api-v4';
 
@@ -630,5 +631,73 @@ export const mockGetCloudPulseServiceByType = (
     'GET',
     apiMatcher(`monitor/services/${serviceType}`),
     makeResponse(service)
+  );
+};
+
+/**
+ * Mocks get call for a specific alert channel by ID.
+ *
+ * @param {number} id - The ID of the alert channel to retrieve.
+ * @param {NotificationChannel} channel - The notification channel object to return in the response.
+ * @returns {Cypress.Chainable<null>} - A Cypress chainable used to continue the test flow.
+ */
+export const mockGetAlertChannelById = (
+  id: number,
+  channel: NotificationChannel
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'GET',
+    apiMatcher(`/monitor/alert-channels/${id}`),
+    makeResponse(channel)
+  );
+};
+
+/**
+ * Mocks get call for a specific alert channel by ID.
+ *
+ * @param {number} id - The ID of the alert channel to retrieve.
+ * @param {NotificationChannel} channel - The notification channel object to return in the response.
+ * @returns {Cypress.Chainable<null>} - A Cypress chainable used to continue the test flow.
+ */
+export const mockGetAlertChannelByIdError = (
+  id: number
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'GET',
+    apiMatcher(`/monitor/alert-channels/${id}`),
+    makeErrorResponse('Error fetching alerts for channel', 500)
+  );
+};
+
+/**
+ * Intercepts GET request to retrieve alerts associated with a notification channel
+ *
+ * @param channelId - The ID of the notification channel
+ * @param alerts - Mock alert data to return
+ * @returns Cypress chainable
+ */
+export const mockGetAlertsByChannelId = (
+  channelId: number,
+  alerts: NotificationChannelAlerts[]
+) => {
+  return cy.intercept(
+    'GET',
+    apiMatcher(`/monitor/alert-channels/${channelId}/alerts*`),
+    paginateResponse(alerts, 200, 5, 2)
+  );
+};
+
+/**
+ * Intercepts GET request to retrieve alerts associated with a notification channel
+ *
+ * @param channelId - The ID of the notification channel
+ * @param alerts - Mock alert data to return
+ * @returns Cypress chainable
+ */
+export const mockGetAlertsByChannelIdError = (channelId: number) => {
+  return cy.intercept(
+    'GET',
+    apiMatcher(`/monitor/alert-channels/${channelId}/alerts*`),
+    makeErrorResponse('Error fetching alerts for channel', 500)
   );
 };

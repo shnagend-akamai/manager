@@ -3704,6 +3704,9 @@ export const handlers = [
     }
     return HttpResponse.json({}, { status: 404 });
   }),
+  // http.get('*/monitor/alert-channels/:id/alerts', ({ params }) => {
+  // return HttpResponse.json({ errors: [{reason: 'OMG!' }]}, {status: 400 });
+  // }),
   http.get('*/monitor/alert-channels/:id/alerts', ({ params }) => {
     if (params.id === 'undefined') {
       return HttpResponse.json({}, { status: 404 });
@@ -3711,10 +3714,18 @@ export const handlers = [
     if (params.id === '5') {
       return HttpResponse.json(makeResourcePage([]));
     }
+    if (params.id === '4') {
+      const systemAlerts = notificationChannelAlertsFactory.buildList(5);
+      return HttpResponse.json(makeResourcePage(systemAlerts));
+    }
     const alerts = notificationChannelAlertsFactory.buildList(3);
     const dbaasalerts = notificationChannelAlertsFactory.buildList(2, {
       service_type: 'dbaas',
     });
+    if (params.id === '6') {
+      const userAlerts = notificationChannelAlertsFactory.buildList(100);
+      return HttpResponse.json(makeResourcePage(userAlerts));
+    }
     alerts.push(...dbaasalerts);
     return HttpResponse.json(makeResourcePage(alerts));
   }),
