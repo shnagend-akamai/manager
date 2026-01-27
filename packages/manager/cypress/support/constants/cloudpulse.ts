@@ -5,12 +5,12 @@
 
 export const cloudPulseServiceMap: Record<string, string> = {
   dbaas: 'Databases',
-  linode: 'Linode',
-  nodebalancer: 'NodeBalancer',
-  firewall: 'Firewall',
-  objectstorage: 'Object Storage',
-  blockstorage: 'Block Storage',
-  lke: 'LKE',
+  linode: 'Linodes',
+  nodebalancer: 'Nodebalancers',
+  firewall: 'Firewalls',
+  objectstorage: 'ObjectStorage',
+  blockstorage: 'Volumes',
+  lke: 'Kubernetes',
 };
 /**
  * Descriptions used in the Create/Edit Alert form to guide users
