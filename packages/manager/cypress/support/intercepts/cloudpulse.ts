@@ -790,6 +790,6 @@ export const mockGetAlertsForChannelIdError = (channelId: number) => {
   return cy.intercept(
     'GET',
     apiMatcher(`/monitor/alert-channels/${channelId}/alerts*`),
-    makeErrorResponse('Error in fetching the alerts.', 500)
+    makeErrorResponse('Error in fetching the alerts.', 400)
   );
 };

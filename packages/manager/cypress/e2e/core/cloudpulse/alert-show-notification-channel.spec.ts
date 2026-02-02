@@ -198,7 +198,7 @@ describe('CloudPulse Alerting - Notification Channel Show details Validation', (
             .should('be.visible')
             .and(
               'have.text',
-              `${cloudPulseServiceMap[alert.service_type]}beta`
+              `${cloudPulseServiceMap[alert.service_type]} beta`
             );
         });
       });
@@ -594,6 +594,7 @@ describe('CloudPulse Alerting - Notification Channel Show details Validation', (
   });
 
   it('should verify clicking on the alert name navigates to the alert detail page', () => {
+    mockGetAlertsForChannelId(id, mockAlerts).as('getAlertsForChannelId');
     cy.wait('@getAlertNotificationChannels');
     // Select the first notification channel to edit
     ui.actionMenu
@@ -603,18 +604,31 @@ describe('CloudPulse Alerting - Notification Channel Show details Validation', (
     cy.wait('@getAlertNotificationChannelbyId');
     cy.wait('@getAlertsForChannelId');
 
-    // Click on the first alert name in the Associated Alerts table
-    const firstAlert = mockAlerts[0];
+    // Get the first visible alert's ID from the table, then click it
     cy.get('[data-qa="associated-alerts-table"]')
       .find('tbody')
       .within(() => {
-        cy.get('[data-qa-alert-link="true"]').first().click();
-      });
+        cy.get('[data-qa-alert-cell]')
+          .first()
+          .invoke('attr', 'data-qa-alert-cell')
+          .then((cellAttr) => {
+            // Extract the alert ID from the data-qa-alert-cell attribute
+            const alertId = parseInt(cellAttr || '0', 10);
 
-    // Verify that the URL navigates to the correct alert detail page
-    cy.url().should(
-      'include',
-      `/alerts/definitions/detail/${firstAlert.service_type}/${firstAlert.id}`
-    );
+            // Find the corresponding alert from mockAlerts
+            const clickedAlert = mockAlerts.find(
+              (alert) => alert.id === alertId
+            );
+
+            // Click the alert link
+            cy.get('[data-qa-alert-link="true"]').first().click();
+
+            // Verify that the URL navigates to the correct alert detail page
+            cy.url().should(
+              'include',
+              `/alerts/definitions/detail/${clickedAlert?.service_type}/${clickedAlert?.id}`
+            );
+          });
+      });
   });
 });
